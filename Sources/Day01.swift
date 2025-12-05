@@ -22,31 +22,23 @@ struct Day01: Day {
         for i in 0..<lines.count {
 
             // Check wether the rotation is left (L) or right (R)
-            if let rotation = lines[i].first {
+            if let rotation = lines[i].first,
                 // Check times
-                let times: Int? = Int(lines[i].dropFirst())
-                if let unwTimes = times {
+                let times = Int(lines[i].dropFirst()) {
+                    let timesNoLaps = times % 100
+
                     // Left rotation
                     if rotation == "L" {
-                        var value = unwTimes
-
-                        let laps = Int((unwTimes) / 100)
-                        value -= (Int(laps) * 100)
-
-                        curDialPos -= value
+                        curDialPos -= timesNoLaps
 
                         if curDialPos < 0 {
                             curDialPos = 100 - abs(curDialPos)
                         }
                     }
+                
                     // Right rotation
                     else if rotation == "R" {
-                        var value = unwTimes
-
-                        let laps = Int((unwTimes) / 100)
-                        value -= (Int(laps) * 100)
-
-                        curDialPos += value
+                        curDialPos += timesNoLaps
 
                         if curDialPos > 99 {
                             curDialPos -= 100
@@ -59,9 +51,6 @@ struct Day01: Day {
                     }
                 }
             }
-
-        }
-
         let result = String(count)
         return result
     }
@@ -77,12 +66,11 @@ struct Day01: Day {
         for i in 0..<lines.count {
 
             // Check wether the rotation is left (L) or right (R)
-            if let rotation = lines[i].first {
+            if let rotation = lines[i].first,
                 // Check times
-                let times: Int? = Int(lines[i].dropFirst())
-                if let unwTimes = times {
-                    let laps = unwTimes / 100
-                    let timesNoLaps = unwTimes % 100
+               let times = Int(lines[i].dropFirst()){
+                    let laps = times / 100
+                    let timesNoLaps = times % 100
 
                     // Left rotation (L)
                     if rotation == "L" {
@@ -97,6 +85,7 @@ struct Day01: Day {
                                 count += laps
                             }
                         }
+                        
                         // At start dial points at number != 0
                         else {
                             if newDialPos < 0 {
@@ -124,6 +113,7 @@ struct Day01: Day {
                                 count += laps
                             }
                         }
+                        
                         // At start dial points at number != 0
                         else {
                             if newDialPos > 99 {
@@ -135,12 +125,10 @@ struct Day01: Day {
                         }
                         curDialPos = newDialPos
                     } else {
-                        print("Invalid input: \(rotation)\(unwTimes)")
+                        print("Invalid input: \(rotation)\(times)")
                     }
                 }
             }
-        }
-
         let result = String(count)
         return result
     }
