@@ -16,7 +16,7 @@ struct Day01: Day {
 
         let lines = input.split(separator: "\n")
         var count = 0
-        var dialPos = 50
+        var curDialPos = 50
 
         // Read input line by line
         for i in 0..<lines.count {
@@ -33,10 +33,10 @@ struct Day01: Day {
                         let laps = Int((unwTimes) / 100)
                         value -= (Int(laps) * 100)
 
-                        dialPos -= value
+                        curDialPos -= value
 
-                        if dialPos < 0{
-                            dialPos = 100 - abs(dialPos)
+                        if curDialPos < 0 {
+                            curDialPos = 100 - abs(curDialPos)
                         }
                     }
                     // Right rotation
@@ -46,15 +46,15 @@ struct Day01: Day {
                         let laps = Int((unwTimes) / 100)
                         value -= (Int(laps) * 100)
 
-                        dialPos += value
+                        curDialPos += value
 
-                        if dialPos > 99 {
-                            dialPos -= 100
+                        if curDialPos > 99 {
+                            curDialPos -= 100
                         }
                     }
 
                     // Dial at 0, so count is increased
-                    if dialPos == 0 {
+                    if curDialPos == 0 {
                         count += 1
                     }
                 }
@@ -67,10 +67,11 @@ struct Day01: Day {
     }
 
     func part2() -> String {
-       
+
         let lines = input.split(separator: "\n")
         var count = 0
-        var dialPos = 50
+        var curDialPos = 50
+        var newDialPos = 0
 
         // Read input line by line
         for i in 0..<lines.count {
@@ -80,45 +81,64 @@ struct Day01: Day {
                 // Check times
                 let times: Int? = Int(lines[i].dropFirst())
                 if let unwTimes = times {
-                    print("\(rotation)\(unwTimes)")
-                    // Left rotation
+                    let laps = unwTimes / 100
+                    let timesNoLaps = unwTimes % 100
+
+                    // Left rotation (L)
                     if rotation == "L" {
-                        var value = unwTimes
+                        newDialPos = curDialPos - timesNoLaps
 
-                        let laps = Int((unwTimes) / 100)
-                        value -= (Int(laps) * 100)
-
-                        dialPos -= value
-
-                        if dialPos < 0{
-                            dialPos = 100 - abs(dialPos)
-                            print("f1")
+                        // At start dial points at 0
+                        if curDialPos == 0 {
+                            if newDialPos < 0 {
+                                newDialPos = 100 - abs(newDialPos)
+                                count += laps
+                            } else {
+                                count += laps
+                            }
                         }
-                        print("\(dialPos)\n")
+                        // At start dial points at number != 0
+                        else {
+                            if newDialPos < 0 {
+                                newDialPos = 100 - abs(newDialPos)
+                                count += laps + 1
+                            } else if newDialPos == 0 {
+                                count += laps + 1
+                            } else {
+                                count += laps
+                            }
+                        }
+                        curDialPos = newDialPos
                     }
-                    // Right rotation
+
+                    // Right rotation (R)
                     else if rotation == "R" {
-                        var value = unwTimes
+                        newDialPos = curDialPos + timesNoLaps
 
-                        let laps = Int((unwTimes) / 100)
-                        value -= (Int(laps) * 100)
-
-                        dialPos += value
-
-                        if dialPos > 99 {
-                            dialPos -= 100
-                            print("f2")
+                        // At start dial points at 0
+                        if curDialPos == 0 {
+                            if newDialPos > 99 {
+                                newDialPos -= 100
+                                count += laps
+                            } else {
+                                count += laps
+                            }
                         }
-                        print("\(dialPos)\n")
-                    }
-
-                    // Dial at 0, so count is increased
-                    if dialPos == 0 {
-                        count += 1
+                        // At start dial points at number != 0
+                        else {
+                            if newDialPos > 99 {
+                                newDialPos -= 100
+                                count += laps + 1
+                            } else {
+                                count += laps
+                            }
+                        }
+                        curDialPos = newDialPos
+                    } else {
+                        print("Invalid input: \(rotation)\(unwTimes)")
                     }
                 }
             }
-
         }
 
         let result = String(count)
