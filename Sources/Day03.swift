@@ -58,35 +58,48 @@ struct Day03: Day {
                 line.map { Int(String($0))! }
             }
 
-        var batteries = 0
+        var batteries: [Int]
+        var lastDigitIndex: Int
+        var remainingDigits: Int
         var totalJoltage = 0
-        var firstDigit = 0
-        var secondDigit = 0
-
-        //        for i in 0..<inputMtx.count {
-        //            for j in 0..<inputMtx[i].count {
-        //                print("\(inputMtx[i][j])", terminator: " ")
-        //
-        //            }
-        //            print()
-        //        }
 
         for i in 0..<inputMtx.count {
+            // Reset batteries
+            batteries = Array(repeating: 0, count: 12)
+            lastDigitIndex = 0
+            remainingDigits = 12
+            var k = 0
 
-            // Find max value in line dropping last value
-            let line = Array(inputMtx[i].dropLast())
-            firstDigit = line.max() ?? 0
-            let firstDigitIndex = line.firstIndex(of: firstDigit) ?? 0
-            secondDigit = 0
-
-            for j in firstDigitIndex + 1..<inputMtx[i].count {
-                if inputMtx[i][j] > secondDigit {
-                    secondDigit = inputMtx[i][j]
+            for j in 0..<inputMtx[i].count {
+                // Verify if next number is higher and enough numbers still left
+                if inputMtx[i][j] > batteries[0]
+                    && remainingDigits <= inputMtx[i].count - j
+                {
+                    batteries[k] = inputMtx[i][j]
+                    lastDigitIndex = j
                 }
             }
 
-            batteries = firstDigit * 10 + secondDigit  // a * 10 + b
-            totalJoltage += batteries
+            remainingDigits -= 1
+            k += 1
+
+            while remainingDigits > 0 {
+                for j in lastDigitIndex + 1..<inputMtx[i].count {
+                    // Verify if next number is higher and enough numbers still left
+                    if inputMtx[i][j] > batteries[k]
+                        && remainingDigits <= inputMtx[i].count - j
+                    {
+                        batteries[k] = inputMtx[i][j]
+                        lastDigitIndex = j
+                    }
+                }
+                remainingDigits -= 1
+                k += 1
+            }
+
+            // Convert array of digits into one digit and add it to total joltage
+            let batteriesValue = Int(batteries.map(String.init).joined())!
+            totalJoltage += batteriesValue
         }
 
         let result = String(totalJoltage)
