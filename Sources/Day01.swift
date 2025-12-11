@@ -5,7 +5,7 @@ struct Day01: Day {
     let input: String
 
     init() {
-        if let inputData = InputReader.read(day: 1) {
+        if let inputData = InputReader.read(day: day) {
             self.input = inputData
         } else {
             self.input = ""
