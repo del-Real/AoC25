@@ -49,7 +49,6 @@ struct Day02: Day {
                     // Split number in two parts
                     let firstPart = Int(numStr[..<index])
                     let secondPart = Int(numStr[index...])
-                    // print("\(firstPart), \(secondPart)")
 
                     // Both parts identical then is a invalid ID
                     if firstPart == secondPart {
@@ -65,6 +64,7 @@ struct Day02: Day {
     }
 
     func part2() -> String {
+        let start = CFAbsoluteTimeGetCurrent()
         var count = 0
         let lines = input.split { $0 == "," || $0 == "\n" }
 
@@ -80,38 +80,43 @@ struct Day02: Day {
                 print("Invalid interval", line)
                 continue
             }
-            // print("[\(start), \(end)]")
+            //print("[\(start), \(end)]")
 
             var iterValue = start
 
             // Iterate from start to end
             while iterValue <= end {
 
-                let numStr = String(iterValue)
                 let numDigits = String(iterValue).count
-                let splitPos = numDigits / 2
+                let iterValueStr = String(iterValue)
 
-                // Check if number has pair digits
-                if numDigits % 2 == 0 {
-                    let index = numStr.index(
-                        numStr.startIndex,
-                        offsetBy: splitPos
-                    )
+                // Regex init
+                var regexStr = String(iterValueStr.prefix(1))
+                let pfxLimit = numDigits / 2
+                var pfxCurr = 1
+                var countMatches = 0
 
-                    // Split number in two parts
-                    let firstPart = Int(numStr[..<index])
-                    let secondPart = Int(numStr[index...])
-                    // print("\(firstPart), \(secondPart)")
+                while pfxCurr <= pfxLimit {
 
-                    // Both parts identical then is a invalid ID
-                    if firstPart == secondPart {
+                    regexStr = String(iterValueStr.prefix(pfxCurr))
+
+                    // Find matches
+                    let regexPattern = try! Regex(regexStr)
+                    countMatches = iterValueStr.matches(of: regexPattern).count
+
+                    // Add as invalid Id
+                    if countMatches * pfxCurr == numDigits {
                         count += iterValue
-                        //print("Invalid ID: \(iterValue)")
+                        //print("\t\(iterValueStr) - \(countMatches)")
+                        break
                     }
+                    pfxCurr += 1
                 }
                 iterValue += 1
             }
         }
+        let end = CFAbsoluteTimeGetCurrent()
+        print("Time elapsed: \(end - start) seconds")
 
         let result = String(count)
         return result
