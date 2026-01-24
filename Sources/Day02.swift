@@ -14,8 +14,8 @@ struct Day02: Day {
 
     func part1() -> String {
 
-        var count = 0
         let lines = input.split { $0 == "," || $0 == "\n" }
+        var count = 0
 
         // Loop to get intervals
         for line in lines {
