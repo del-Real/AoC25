@@ -6,9 +6,10 @@ let days: [Day] = [
     Day03(),
     Day04(),
     Day05(),
+    Day06()
 ]
 
-let currentDay = 2
+let currentDay = 6
 
 //days.forEach { $0.run() }
 days[currentDay - 1].run()
